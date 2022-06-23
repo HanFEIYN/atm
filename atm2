@@ -1,0 +1,270 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#define maxnum 3
+struct ACONUNT {
+	int id;
+	char name[20];
+	char password[10];
+	double money;
+};//结构体
+
+ACONUNT g_user[maxnum] = {
+	{101,"abc","123456",100},
+ 	{102,"def","654321",200},
+ 	{103,"ghi","111222",300},
+};//初始化用户
+	int count = 3;//用户的起初个数
+	int i;//定义全局变量
+
+ACONUNT Initial(char ch[15]) {
+ 	ACONUNT ac;
+ 	char* p;
+
+ 	p = strtok(ch, ";");
+ 	ac.id = atoi(p);//字符串转为int
+
+	 p = strtok(NULL, ";");
+ 	strcpy(ac.name, p);
+
+ 	p = strtok(NULL, ";");
+ 	strcpy(ac.password, p);
+
+ 	p = strtok(NULL, ";");
+ 	ac.money = atof(p);
+
+ 	return ac;
+}//拆分文件数据
+
+
+void welcome() {
+   	 printf("-----------欢迎使用江哥银行----------------\n");
+	 printf("--------请注意周围环境是否安全-------------\n");
+	 printf("-----------请登录您的账号------------------\n");
+
+}
+
+int login(int c_id) {
+ 	int re;
+ 	char user_password[10];
+ 	for (i = 0; i < maxnum; i++) {
+ 		 if (c_id == g_user[i].id) {
+  			 for (int j = 1; j <= 3; j++) {
+   				 printf("请您输入秘密\n");
+    			 scanf("%s", user_password);
+   				 if (strcmp(user_password, g_user[i].password) == 0) {
+     				printf("您已登录成功!\n");
+     				re = 1;
+     				break;
+   					 }
+   }
+   break;
+  }
+ }
+ if (i == maxnum) {
+ 	 printf("您输入密码有错!\n");
+ 	 re = 0;
+ }
+ 	return re;
+}//登录
+
+void caidan() {
+ 	 printf("-----------江哥银行提供以下服务--------\n");
+	 printf("---------1查询--------2存钱------------\n");
+	 printf("---------3取钱--------4转账------------\n");
+	 printf("---------5改密--------6开户------------\n");
+	 printf("----------------7销户------------------\n");
+}//菜单
+
+void qukuan() {
+ 	int user_money;
+	int jixu;
+ 	while (1) {
+ 		printf("请输入您要取款的金额！\n");
+  		scanf("%d", &user_money);//取多少钱
+ 	if (user_money <= g_user[i].money) {
+  		 g_user[i].money -= user_money;
+  		 printf("取款成功，余额还有：%lf\n", g_user[i].money);
+  		 printf("是否继续取钱，继续请按1，截至请按0\n");
+ 		 scanf("%d", &jixu);
+   if (jixu == 0)
+    break;
+  }
+  else {
+  	 printf("余额不足！，如若继续取款，请输入1；反之请输入0\n");
+  	 scanf("%d", &jixu);
+   if (jixu == 0)
+ 	   break;
+  }
+ }
+}
+
+void cunkuan() {
+ 	int user_money;
+ 	int jixu;
+ 	while (1) {
+ 		printf("请输入您要存的金额！\n");
+  		scanf("%d", &user_money);
+ 		g_user[i].money += user_money;
+ 		printf("存款成功！，余额还有：%lf\n", g_user[i].money);
+  		printf("是否继续存款，请输入1；反之请输入0\n");
+  		scanf("%d", &jixu);
+ 	 if (jixu == 0)
+  		 break;
+ }
+}
+
+void gaimi(){
+	char xuser_password[20];//定义一个新变量来暂存新密码
+ 	char xxuser_password[20];//第二次输入的密码
+
+ 	 printf("您将进行修改密码的操作\n");
+ 	 printf("请输入六位数的新密码\n");
+  	scanf("%s",&xuser_password);
+ 	if(strcmp(xuser_password,g_user[i].password)==1){
+ 	 printf("请再次输入新密码");
+ 	 scanf("%s",&xxuser_password);//确认您想修改的密码
+ 	if(strcmp(xuser_password,xxuser_password)==1){//判断第二次确认的密码跟第一次输入的是否相等
+  	strcpy(xxuser_password,g_user[i].password);//更新系统中的密码;
+ 	printf("修改密码成功");
+
+ }//判断是否和原密码相同
+
+ else
+  	printf("请不要输入原密码!\n");
+
+ }
+ }//改密
+
+void chaxun() {
+ 	printf("你的账号还有余额为：%lf\n", g_user[i].money);
+}
+
+void zhuanzhang() {
+ 	int money;
+	 int id;
+	 int j;
+ 	int n = 0;
+ 	int s = 0;
+ 	printf("请输入您要转账人的卡号\n");
+ 	scanf("%d", &id);
+ 	for (n = 0; n < 3; n++) {
+ 		 for (j = 0; j < count; j++) {
+   			if (id == g_user[j].id) {
+   			 printf("请输入您要转的金额\n");
+   			 scanf("%d", &money);
+    		if (money <= g_user[i].money) {
+     			g_user[i].money -= money;
+    			 g_user[j].money += money;
+
+    }
+   		 s = 1;
+    	printf("转账成功！");
+   		 printf("您现在的余额还有:%f\n", g_user[i].money);
+    break;
+
+   }
+  }
+  if (s == 1)
+   break;
+  if (j > count)
+   	printf("can not find this id!\n");
+ }
+ if (n > 3)
+ 	 printf("结束操作，您已退出该系统！");
+}//转账
+
+void kaihu(){
+	ACONUNT new_user;
+	char name[10];
+	int  year;
+	char mima[10];
+	printf("请将您的基本信息填与下表！\n");
+	printf("姓名:  ;年龄:  \n");
+	scanf("%s %d",&name,&year);
+	if(year>16){
+		count++;//把用户数加1
+		printf("请输入您的卡号\n");
+		scanf("%d",&new_user.id);
+		strcpy(new_user.name,name);//把一开始输入的姓名直接赋给系统里
+		printf("此卡持有人名字为:%s\n",new_user.name);
+		printf("请输入您6位数密码！\n");
+		scanf("%s",&new_user.password);
+		printf("请再次确认您6位数密码！\n");
+		scanf("%s",&mima);
+		if(strcmp(mima,new_user.password)==0){//判断第二次确认的密码跟第一次输入的是否相等
+ 		printf("设置密码成功！\n");
+ 		printf("恭喜您开户成功！\n");
+		printf("基本信息为：\n");
+		printf("卡号：%d 姓名：%s 密码：%s ",new_user.id,new_user.name,new_user.password);
+ 		printf("您当前余额为0，存款请进行操作\n");
+
+		}
+	}
+	else
+		printf("请在监护人陪同开户！\n");
+
+}
+void xiaohu(){
+	char user_password[10];
+	int re;
+	printf("确定销户当前账号？是1，否0\n");
+	scanf("%d",&re);
+	if(re==1){
+	printf("请输入当前用户的密码:");
+	scanf("%s",&user_password);
+	if(strcmp(user_password, g_user[i].password) == 0){
+	printf("销户成功！\n");
+	g_user[i].id--;
+	count--;
+		} else
+	printf("密码错误，销户失败！\n");
+	}
+}
+
+void gx() {
+ 	FILE* fp;
+ 	fp = fopen("C:\\Users\\86173\\Desktop\\a.txt", "r");
+ 	if (fp == NULL) {
+ 		 printf("can not open this file!\n");
+  		exit(0);
+ }
+ 	for (int i = 0; i < count; i++) {
+  		fprintf(fp, "%d,%s,%s,%lf\n", g_user[i].id, g_user[i].name, g_user[i].password, g_user[i].money);
+ }
+ 		fclose(fp);
+}
+int main() {
+ //欢迎界面
+ //插卡
+ //找id
+  //输入密码
+  //判断
+ 	welcome();
+ 	int c_id;
+ 	int str = 0;
+ 	scanf("%d", &c_id);
+ 	if (login(c_id) == 1) {
+ 	 while (1) {
+   		caidan();
+   		int n;
+   		printf("请选择您所需的服务：");
+  		 scanf("%d", &n);
+  		 switch (n) {
+  				 case 1:printf("您将进行查询操作\n"); chaxun();printf("结束此次服务请按0\n");break;
+   			 	 case 2:printf("您将进行存款操作\n"); cunkuan();printf("结束此次服务请按0\n");break;
+  				 case 3:printf("您将进行取款操作\n"); qukuan();printf("结束此次服务请按0\n");break;
+  				 case 4:printf("您将进行转账操作\n"); zhuanzhang();printf("结束此次服务请按0\n");break;
+  				 case 5:printf("您将进行改密操作\n"); gaimi();printf("结束服务请按0\n");break;
+  				 case 6:printf("您将进行开户操作\n"); kaihu();gx();printf("结束服务请按0\n");break;
+  				 case 7:printf("您将进行销户操作\n"); xiaohu();return 0;
+  				 case 0:str=1;printf("您已结束本次服务！");break;
+   }
+   		if (str == 1)
+   			 break;
+  }
+  		gx();
+ }
+
+ return 0;
+}
