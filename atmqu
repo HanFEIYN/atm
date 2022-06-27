@@ -1,0 +1,329 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include <Windows.h>  
+#include <time.h>  
+#define MaxNum 3
+int i;
+struct ACONUNT{
+	int num;
+	char name[30];
+	char passcard[10];
+	double moneny;
+}g_user[MaxNum];
+FILE *fp,*ffp; 
+ACONUNT Initial(char *ch){
+	ACONUNT ac;
+	char *p;
+	p=strtok(ch,",");
+	ac.num=atoi(p);
+	p=strtok(NULL,",");
+	strcpy(ac.name,p);
+	p=strtok(NULL,",");
+	strcpy(ac.passcard,p);
+	p=strtok(NULL,",");
+	ac.moneny=atof(p);
+	return ac;
+}
+int denglu(int c_num){		//登录 
+	int r;
+	char user_passcard[10];
+	for(i=0;i<MaxNum;i++){
+		if(c_num==g_user[i].num){
+			for(int j=0;j<=3;j++){
+				printf("请输入密码\n");
+				scanf("%s",user_passcard);
+				if(strcmp(user_passcard,g_user[i].passcard)==0){
+					printf("恭喜登陆成功\n");
+					r=1;
+					break;
+				}
+			}
+			break;
+		}
+	}
+	if(i==MaxNum){
+		printf("can not find this id");
+		r=0;
+	}
+	return r;
+}
+
+void welcome(){
+	printf("欢迎来到**银行\n");
+}
+void caidan(){			//菜单 
+	printf("1；取款 ");
+	printf("2：查询 ");
+	printf("3：存款 ");
+	printf("4：改密 ");
+	printf("5: 转账 ");
+	printf("6：流水 ");
+	printf("7：退出 ");
+	
+}
+double qukuan(){		//取款 
+	int user_moneny[10],moneny=0;
+	int jixu;	
+	printf("您的当前余额为：");
+	printf("%lf",g_user[i].moneny);
+	while(1){
+		for(int m=0;m<10;m++){
+			printf("请输入您想取走的金额\n");
+			scanf("%d",&user_moneny[m]);
+			moneny+=user_moneny[m];
+			if(moneny<=10000){
+				if(user_moneny[m]<=g_user[i].moneny)
+					g_user[i].moneny-=user_moneny[m];	
+				else{
+					printf("对不起，您的余额不足\n");
+					break;
+				}
+				printf("您的剩余余额为：");
+				printf("%lf\n",g_user[i].moneny); 
+				printf("是否继续取款？");
+				printf("是：1，否：0\n");
+				scanf("%d",&jixu);
+				if(jixu==0)
+					break;	
+			}
+			else{
+				printf("对不起，您本次取款额已达到最大，不能再继续取款\n"); 
+				break;
+			}
+				
+		}
+		break;
+
+		
+	}
+	return g_user[i].moneny;
+}
+
+double cunkuan(){		//存款 
+	int user_moneny[10],moneny=0;
+	int jixu;	
+	printf("您的当前余额为：");
+	printf("%lf",g_user[i].moneny);
+	while(1){
+		for(int m=0;m<10;m++){
+			printf("请输入您想存入的金额\n");
+			scanf("%d",&user_moneny[m]);
+			moneny+=user_moneny[m];
+			if(moneny<=10000){
+				if(user_moneny[m]<=g_user[i].moneny)
+					g_user[i].moneny+=user_moneny[m];	
+				printf("您的剩余余额为：");
+				printf("%lf\n",g_user[i].moneny); 
+				printf("是否继续存款？");
+				printf("是：1，否：0\n");
+				scanf("%d",&jixu);
+				if(jixu==0)
+					break;	
+			}
+			else{
+				printf("对不起，您本次存款额已达到最大，不能再继续存款\n");
+				break;
+			}
+		}
+		
+		break;
+		
+	}
+	return g_user[i].moneny;
+}
+void chaxun(){		//查询 
+	printf("您的当前余额为：");
+	printf("%lf\n",g_user[i].moneny);
+}
+void gaimi(){		//改密 
+	char user_passcard[10];
+	char user_passcard1[10];
+	for(int j=0;j<=3;j++){
+		printf("请输入旧密码\n");
+		scanf("%s",user_passcard);
+		if(strcmp(user_passcard,g_user[i].passcard)==0){
+			printf("请输入新密码\n");
+			scanf("%s",user_passcard1);
+			if(strlen(user_passcard1)==6){
+				strcpy(g_user[i].passcard,user_passcard1);
+				printf("修改密码成功\n");
+			}
+			else 
+				printf("修改密码失败\n");	
+			break;
+		}
+	
+	}
+	
+}
+double zhuanzhang(){		//转账 
+	int user_moneny[10],moneny=0;
+	int user_num;
+	int jixu,s=0;
+	int n,j;
+	for(n=0;n<3;n++){
+		printf("请输入您想转账的卡号");
+		scanf("%d",&user_num);
+		for(j=0;j<MaxNum;j++){
+			if(user_num==g_user[j].num){
+				while(1){
+					for(int m=0;m<10;m++){
+						printf("请输入您想转账的金额\n"); 
+						scanf("%d",&user_moneny[m]);
+						moneny+=user_moneny[m];
+						if(moneny<=10000){
+							if(user_moneny[m]<=g_user[i].moneny){
+								g_user[i].moneny-=user_moneny[m];
+								g_user[j].moneny+=user_moneny[m];
+								printf("转账成功");
+							}
+							else{
+								printf("您的余额不足\n");
+								break;
+							}
+							printf("您的剩余余额为：");
+							printf("%lf\n",g_user[i].moneny); 
+							printf("是否继续转账？");
+							printf("是：1，否：0\n");
+							scanf("%d",&jixu);
+							if(jixu==0){
+								break;
+								s=2;		
+							}
+						}	
+						else{
+							printf("对不起，您本次转账额已达到最大，不能再继续转账\n");
+							break; 
+						}
+						
+					
+					}	
+					break;
+				}
+			
+			}
+			if(s==2)
+				break;	
+		}
+		break;
+	}
+	return g_user[i].moneny;
+}
+void liushuizhang(double m,double n){       //      单个账户的流水 
+	double liushui[MaxNum];      //用   MaxNum  明确用户  ;
+	ffp=fopen("C:\\Users\\W\\Desktop\\liushui.txt","a");//    a 操作是写入，但不覆盖 
+		if(ffp==NULL){
+			printf("Cannot open this file\n");
+			exit (0);
+		}
+		char *s;
+		time_t timep;
+		struct tm *p;
+		time(&timep);
+		p=gmtime(&timep);
+		fprintf(ffp,"%d/%d/%d ",p->tm_year+1900,p->tm_mon+1,p->tm_mday);    //获取年,月，日 
+		fprintf(ffp,"%d:%d:%d\n",p->tm_hour+8,p->tm_min,p->tm_sec);        //获取时，分，秒 
+		fprintf(ffp,"%d:",g_user[i].num);//以账户入手，通过卡号来确定  流水的主人	 
+		if(m>n){
+			liushui[i]=m-n;
+			fprintf(ffp,"-");
+		}
+		if(m<n){
+			liushui[i]=n-m;
+			fprintf(ffp,"+");
+		}
+		fprintf(ffp,"%lf\n",liushui[i]);	
+	fclose(ffp);	
+}
+void c_liushui(){		//记录流水 
+	char s[100];
+	ffp=fopen("C:\\Users\\W\\Desktop\\liushui.txt","r");
+			if(ffp==NULL){
+				printf("Cannot open this file\n");
+				exit (0);
+			}
+	struct neirong{
+		int id;
+		char liushui[20];
+	}cx;
+	char *p; 
+	while(fgets(s,100,ffp)!=NULL){         //将截取的数据  通过卡号来找到同一账户 的流水 
+			p=strtok(s,":");//截取数据并以字符 形式
+			cx.id=atoi(p);
+			p=strtok(NULL,":");
+			strcpy(cx.liushui,p);
+		if(cx.id==g_user[i].num){//比对截取的卡号，通过卡号来找到流水 
+			char *s;
+			time_t timep;
+			struct tm *p;
+			time(&timep);
+			p=gmtime(&timep);
+			printf("%d/%d/%d ",p->tm_year+1900,p->tm_mon+1,p->tm_mday);   
+			printf("%d:%d:%d\n",p->tm_hour+8,p->tm_min,p->tm_sec);		
+			printf("%s",cx.liushui);
+		} 
+	}											
+	fclose(ffp); 
+}	
+void gengxin(){		//更新数据 
+
+	fp=fopen("C:\\Users\\W\\Desktop\\yy.txt","w");
+	if(fp==NULL){
+		printf("Cannot open this file\n");
+		exit(0);
+	}
+	for(i=0;i<MaxNum;i++)
+		fprintf(fp,"%d,%s,%s,%lf\n",g_user[i].num,g_user[i].name,g_user[i].passcard,g_user[i].moneny); 
+	fclose(fp);
+}		
+int main(){
+	int g_count=0;
+	int k=0;
+	fp=fopen("C:\\Users\\W\\Desktop\\yy.txt","r");
+	if(fp==NULL){
+		printf("Cannot open this file\n");
+		exit(0);
+	}
+	char buf[100];//缓冲数据
+	while(fgets(buf,100,fp)!=NULL){
+
+		if(g_count>MaxNum)
+			break;
+		 g_user[k]=Initial(buf);
+			 k++;
+			 g_count++;
+	}
+	printf("系统初始化完毕\n");
+	fclose(fp);
+	welcome();
+	int c_num;
+	double gaibian[MaxNum],b;
+	int t;
+	printf("请输入您的卡号"); 
+	scanf("%d",&c_num);
+	if(denglu(c_num)==1){
+		while(1){
+			for(int j=0;j<MaxNum;j++){
+				gaibian[j]=g_user[j].moneny;
+			}
+			caidan();
+		int a;
+		printf("请选择您想办理的业务\n"); 
+		scanf("%d",&a);
+			switch(a){
+				case 1:b=qukuan();liushuizhang(gaibian[i],b);break;
+				case 2:chaxun();break;
+				case 3:b=cunkuan();liushuizhang(gaibian[i],b);break;
+				case 4:gaimi();break;
+				case 5:b=zhuanzhang();liushuizhang(gaibian[i],b);break;
+				case 6:c_liushui();break;
+				case 7:t=7;printf("已成功退出\n");break;
+			}
+			if(t==7)
+				break;
+		}
+	}
+	gengxin();
+	return 0;
+}
